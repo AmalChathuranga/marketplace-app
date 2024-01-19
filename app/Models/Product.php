@@ -10,7 +10,7 @@ class Product extends Model
 {
     use HasFactory;
 
-    protected $fillable =['name','slug','description','image','price'];
+    protected $fillable =['name','slug','description','image','price','quantity'];
 
     //seller relationship
 
