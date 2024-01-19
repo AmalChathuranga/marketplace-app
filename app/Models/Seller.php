@@ -10,9 +10,9 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Seller extends Authenticatable
 {
-    use HasFactory, HasFactory, Notifiable;
+    use HasApiTokens, HasFactory, HasFactory, Notifiable;
 
-    protected $fiiable =['name','email','password','address','contact_no'];
+    protected $fillable =['name','email','password','address','contact_no'];
 
     protected $hidden = [
         'password',
