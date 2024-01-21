@@ -24,7 +24,8 @@ class RegisterSellerRequest extends FormRequest
         return [
             'name' => 'required|string',
             'email' => 'required|string|unique:sellers,email',
-            'password' => 'required|string|confirmed'
+            'password' => 'required|string|confirmed',
+            'image' =>'image|mimes:jpg,png,jpeg,gif,svg'
         ];
     }
 }

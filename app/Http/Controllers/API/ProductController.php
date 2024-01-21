@@ -13,22 +13,22 @@ class ProductController extends Controller
     //get all products
     public function index():Response
     {
-        $products = Product::query()->get();
+        $products = Product::query()->where('is_active',1)->get();
         return response()->json(['data'=>$products ,'status'=> Response::HTTP_CREATED]);
     
     }
 
     //store product
-    public function store( StoreProductRequest $request)
+    public function store( StoreProductRequest $request) :Response
     {
 
-       // $image_path = $request->file('image')->store('image', 'public');
+       $image_path = $request->file('image')->store('image', 'public');
         $data = Product::query()->create([
             'name' =>$request->name,
             'slug'  =>$request->slug,
             'description' =>$request->description,
             'price' => $request->price,
-            //'image' => $image_path,
+            'image' => $image_path,
             'quantity' => $request->quantity,
         ]);
 
@@ -56,6 +56,16 @@ class ProductController extends Controller
         ]);
 
         return response()->json(['data'=>$product ,'status'=> Response::HTTP_CREATED]);
+    }
+
+    //deactivate product
+
+    public function deactiveProduct(Product $product)
+    {
+        $product->is_active =0;
+        $product->save();
+        return response()->json(['data'=>$product ,'status'=> Response::HTTP_CREATED]);
+
     }
 
     //get product by seller
