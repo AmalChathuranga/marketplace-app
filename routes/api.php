@@ -17,6 +17,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 Route::group(['prefix'=>'marketplace','as'=>'marketplace'], function(){
+
     Route::get('/products',[ProductController::class,'index'])->name('products.index');
     Route::get('/products/{product}',[ProductController::class,'show'])->name('products.show');
     Route::post('/registerseller',[SellerController::class,'register'])->name('seller.register');
@@ -26,6 +27,7 @@ Route::group(['prefix'=>'marketplace','as'=>'marketplace'], function(){
     Route::group(['middleware' => ['auth:sanctum']], function () {
         Route::post('/products',[ProductController::class,'store'])->name('product.store');
         Route::patch('/products/{product}', [ProductController::class, 'update'])->name('products.update');
+        Route::get('/deactiveproduct/{product}',[ProductController::class,'deactiveProduct'])->name('product.deactive');
         Route::post('/logout', [SellerController::class, 'logout'])->name('seller.logout');
         Route::post('/storesellerproducts',[SellerController::class,'storeSellerProducts']);
         Route::get('/getsellerproducts',[SellerController::class,'getSellerProductList'])->name('seller.products');
