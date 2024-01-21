@@ -26,8 +26,8 @@ class Seller extends Authenticatable
 
     //product relationship
 
-    public function products() :BelongsToMany
+    public function products() 
     {
-        return $this->belongsToMany(Product::class,'seller_products','seller_id','product_id');
+        return $this->belongsToMany(Product::class,'seller_products','seller_id','product_id')->withTimestamps()->withPivot('quantity');
     }
 }

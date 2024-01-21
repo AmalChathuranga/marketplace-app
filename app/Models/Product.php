@@ -10,12 +10,12 @@ class Product extends Model
 {
     use HasFactory;
 
-    protected $fillable =['name','slug','description','image','price','quantity'];
+    protected $fillable =['name','slug','description','image','price','quantity','is_active'];
 
     //seller relationship
 
-    public function sellers() :BelongsToMany
+    public function sellers() 
     {
-        return $this->belongsToMany(Seller::class,'seller_products','product_id','seller_id');
+        return $this->belongsToMany(Seller::class,'seller_products')->withTimestamps()->withPivot('quantity');
     }
 }

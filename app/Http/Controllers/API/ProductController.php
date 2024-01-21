@@ -19,11 +19,10 @@ class ProductController extends Controller
     }
 
     //store product
-    public function store(StoreProductRequest $request):Response
+    public function store( StoreProductRequest $request)
     {
-    
-        $image_path = $request->file('image')->store('image', 'public');
 
+        $image_path = $request->file('image')->store('image', 'public');
         $data = Product::query()->create([
             'name' =>$request->name,
             'slug'  =>$request->slug,
@@ -65,5 +64,21 @@ class ProductController extends Controller
     {
         $product->query()->delete();
         return response ('',Response::HTTP_NO_CONTENT);
+    }
+
+    //get product by seller
+    public function getProductSellers($id)
+    {
+        $product =Product::findOrFail($id);
+        $sellers = $product->sellers;
+        $data =[];
+        foreach($sellers as $key =>$value)
+        {
+            $data[$key] =[
+                'seller_name' =>$value->name,
+                'quantity' => $value->pivot->quantity,
+            ];
+        }
+        return response($data, Response::HTTP_CREATED);
     }
 }

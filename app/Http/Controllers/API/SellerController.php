@@ -22,16 +22,11 @@ class SellerController extends Controller
             'address' =>$request->address,
             'contact_no' =>$request->address
         ]);
-
-        //generate token using laravel santcum package
-
-        $token = $seller->createToken('marketplacetoken')->plainTextToken;
-
+        $token = self::generateToken($seller);
         $response =[
             'seller' =>$seller,
             'token'  =>$token
         ];
-
         return response($response, Response::HTTP_CREATED);
     }
 
@@ -51,8 +46,7 @@ class SellerController extends Controller
 
         //generate token using laravel santcum package
 
-        $token = $seller->createToken('marketplacetoken')->plainTextToken;
-
+        $token = self::generateToken($seller);
         $response = [
             'seller' => $seller,
             'token' => $token
@@ -61,11 +55,57 @@ class SellerController extends Controller
         return response($response, Response::HTTP_CREATED);
     }
 
+    //generate token
+
+    public function generateToken($data)
+    {
+        //generate token using laravel santcum package
+        $token = $data->createToken('marketplacetoken')->plainTextToken;
+        return $token;
+    }
+
     public function logout(Request $request)
     {
         auth()->user()->tokens()->delete();
         return [
             'message' => 'Logged out Succssfully !!'
         ];
+    }
+
+    
+
+    public function getProducts(Request $request)
+    {
+      
+        //product array
+        $products =[ 6> ['quantity' => 40], 1 => ['quantity' => 100]];
+        $seller = self::getSeller();
+        $seller->products()->attach($products);
+        return 'seller product added';
+
+    }
+
+//get product list by seller
+    public function getSellerProductList()
+    {
+        $seller = self::getSeller();
+        $products =$seller->products;
+        $data =[];
+        foreach($products as $key =>$value)
+        {
+            $data[$key] =[
+                'product_name' =>$value->name,
+                'quantity'    =>$value->pivot->quantity,
+            ];
+        }
+        return response($data, Response::HTTP_CREATED);
+    }
+
+    //get auth seller details
+    public function getSeller()
+    {
+        $id = auth()->user()->id;
+        $seller = Seller::findOrFail($id);
+        return $seller;
     }
 }
