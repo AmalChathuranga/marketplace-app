@@ -14,7 +14,7 @@ class ProductController extends Controller
     public function index():Response
     {
         $products = Product::query()->get();
-        return response($products, Response::HTTP_CREATED);
+        return response()->json(['data'=>$products ,'status'=> Response::HTTP_CREATED]);
     
     }
 
@@ -22,24 +22,24 @@ class ProductController extends Controller
     public function store( StoreProductRequest $request)
     {
 
-        $image_path = $request->file('image')->store('image', 'public');
+       // $image_path = $request->file('image')->store('image', 'public');
         $data = Product::query()->create([
             'name' =>$request->name,
             'slug'  =>$request->slug,
             'description' =>$request->description,
             'price' => $request->price,
-            'image' => $image_path,
+            //'image' => $image_path,
             'quantity' => $request->quantity,
         ]);
 
-        return response($data, Response::HTTP_CREATED);
+        return response()->json(['data'=>$data ,'status'=> Response::HTTP_CREATED]);
     }
 
     //get single products
 
     public function show(Product $product) :Response
     {
-        return response($product, Response::HTTP_CREATED);
+        return response()->json(['data'=>$product ,'status'=> Response::HTTP_CREATED]);
     }
 
     //update product
@@ -55,15 +55,7 @@ class ProductController extends Controller
             'quantity' => $request->quantity ?? $product->quantity,
         ]);
 
-        return response($product, Response::HTTP_CREATED);
-    }
-
-    //delete product
-
-    public function destroy(Product $product) :Response
-    {
-        $product->query()->delete();
-        return response ('',Response::HTTP_NO_CONTENT);
+        return response()->json(['data'=>$product ,'status'=> Response::HTTP_CREATED]);
     }
 
     //get product by seller
@@ -75,10 +67,11 @@ class ProductController extends Controller
         foreach($sellers as $key =>$value)
         {
             $data[$key] =[
+                'seller_id' => $value->id,
                 'seller_name' =>$value->name,
                 'quantity' => $value->pivot->quantity,
             ];
         }
-        return response($data, Response::HTTP_CREATED);
+        return response()->json(['data'=>$data ,'status'=> Response::HTTP_CREATED]);
     }
 }

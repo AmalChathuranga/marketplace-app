@@ -16,22 +16,23 @@ use Illuminate\Support\Facades\Route;
 | be assigned to the "api" middleware group. Make something great!
 |
 */
-Route::get('/products',[ProductController::class,'index'])->name('products.index');
-Route::get('/products/{product}',[ProductController::class,'show'])->name('products.show');
-Route::post('/registerseller',[SellerController::class,'register'])->name('seller.register');
-Route::post('/login',[SellerController::class,'login'])->name('seller.login');
+Route::group(['prefix'=>'marketplace','as'=>'marketplace'], function(){
+    Route::get('/products',[ProductController::class,'index'])->name('products.index');
+    Route::get('/products/{product}',[ProductController::class,'show'])->name('products.show');
+    Route::post('/registerseller',[SellerController::class,'register'])->name('seller.register');
+    Route::post('/login',[SellerController::class,'login'])->name('seller.login');
 
 
-Route::group(['middleware' => ['auth:sanctum']], function () {
-    Route::post('/products',[ProductController::class,'store'])->name('product.store');
-    Route::patch('/products/{product}', [ProductController::class, 'update'])->name('products.update');
-    Route::delete('product/{product}',[ProductController::class,'destroy'])->name('products.destroy');
-    Route::post('/logout', [SellerController::class, 'logout'])->name('seller.logout');
-    Route::post('/getproducts',[SellerController::class,'getProducts']);
-    Route::get('/getsellerproducts',[SellerController::class,'getSellerProductList'])->name('seller.products');
-    Route::get('/getproductsellers/{id}',[ProductController::class,'getProductSellers'])->name('seller.products');
+    Route::group(['middleware' => ['auth:sanctum']], function () {
+        Route::post('/products',[ProductController::class,'store'])->name('product.store');
+        Route::patch('/products/{product}', [ProductController::class, 'update'])->name('products.update');
+        Route::post('/logout', [SellerController::class, 'logout'])->name('seller.logout');
+        Route::post('/storesellerproducts',[SellerController::class,'storeSellerProducts']);
+        Route::get('/getsellerproducts',[SellerController::class,'getSellerProductList'])->name('seller.products');
+        Route::get('/getproductsellers/{id}',[ProductController::class,'getProductSellers'])->name('product.seller');
 });
 
+});
 
 
 

@@ -27,7 +27,8 @@ class SellerController extends Controller
             'seller' =>$seller,
             'token'  =>$token
         ];
-        return response($response, Response::HTTP_CREATED);
+
+        return response()->json(['data'=>$response ,'status'=> Response::HTTP_CREATED]);
     }
 
     //seller login 
@@ -44,19 +45,16 @@ class SellerController extends Controller
             ], Response::HTTP_UNAUTHORIZED);
         }
 
-        //generate token using laravel santcum package
-
         $token = self::generateToken($seller);
         $response = [
             'seller' => $seller,
             'token' => $token
         ];
 
-        return response($response, Response::HTTP_CREATED);
+          return response()->json(['data'=>$response ,'status'=> Response::HTTP_CREATED]);
     }
 
     //generate token
-
     public function generateToken($data)
     {
         //generate token using laravel santcum package
@@ -67,21 +65,19 @@ class SellerController extends Controller
     public function logout(Request $request)
     {
         auth()->user()->tokens()->delete();
-        return [
-            'message' => 'Logged out Succssfully !!'
-        ];
+        return response()->json(['message'=>'user logout successfully' ,'status'=> Response::HTTP_CREATED]);
     }
 
     
 
-    public function getProducts(Request $request)
+    public function storeSellerProducts(Request $request)
     {
       
         //product array
-        $products =[ 6> ['quantity' => 40], 1 => ['quantity' => 100]];
+        $products =[ 5 => ['quantity' => 40], 3 => ['quantity' => 100]];
         $seller = self::getSeller();
         $seller->products()->attach($products);
-        return 'seller product added';
+        return response()->json(['message'=>'product added sucessfully' ,'status'=> Response::HTTP_CREATED]);
 
     }
 
@@ -94,11 +90,12 @@ class SellerController extends Controller
         foreach($products as $key =>$value)
         {
             $data[$key] =[
+                'product_id' => $value->id,
                 'product_name' =>$value->name,
                 'quantity'    =>$value->pivot->quantity,
             ];
         }
-        return response($data, Response::HTTP_CREATED);
+        return response()->json(['data'=>$data ,'status'=> Response::HTTP_CREATED]);
     }
 
     //get auth seller details

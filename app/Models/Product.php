@@ -14,7 +14,7 @@ class Product extends Model
 
     //seller relationship
 
-    public function sellers() 
+    public function sellers() :BelongsToMany
     {
         return $this->belongsToMany(Seller::class,'seller_products')->withTimestamps()->withPivot('quantity');
     }
